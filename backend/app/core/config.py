@@ -31,42 +31,49 @@ class Settings(BaseSettings):
         raise ValueError(v)
     
     # Database settings
-    DATABASE_URL: Optional[str] = None
-    POSTGRES_SERVER: Optional[str] = None
-    POSTGRES_USER: Optional[str] = None
-    POSTGRES_PASSWORD: Optional[str] = None
-    POSTGRES_DB: Optional[str] = None
-    
-    @validator("DATABASE_URL", pre=True)
-    def assemble_db_connection(cls, v, values):
-        if isinstance(v, str):
-            return v
-        return (
-            f"postgresql://{values.get('POSTGRES_USER')}:"
-            f"{values.get('POSTGRES_PASSWORD')}@{values.get('POSTGRES_SERVER')}/"
-            f"{values.get('POSTGRES_DB')}"
-        )
-    
-    # Redis settings
-    REDIS_URL: str = "redis://localhost:6379"
+    DATABASE_URL: str = Field(
+        default="sqlite:///./portfolio_manager.db",
+        description="Database connection URL"
+    )
     
     # Security settings
-    SECRET_KEY: str = "your-secret-key-here-change-in-production"
+    SECRET_KEY: str = Field(
+        default="your-secret-key-here-change-in-production",
+        description="Secret key for JWT tokens"
+    )
+    JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
-    ALGORITHM: str = "HS256"
     
     # External API settings
-    YAHOO_FINANCE_TIMEOUT: int = 10
-    PRICE_CACHE_TIMEOUT: int = 300  # 5 minutes
+    ALPHA_VANTAGE_API_KEY: Optional[str] = Field(
+        default=None,
+        description="Alpha Vantage API key for market data"
+    )
+    YAHOO_FINANCE_ENABLED: bool = Field(
+        default=True,
+        description="Enable Yahoo Finance for market data"
+    )
     
-    # Background task settings
-    PRICE_UPDATE_INTERVAL: int = 60  # seconds
+    # Application settings
+    DEBUG: bool = Field(default=False, description="Debug mode")
+    TESTING: bool = Field(default=False, description="Testing mode")
+    
+    # Pagination settings
+    DEFAULT_PAGE_SIZE: int = 50
+    MAX_PAGE_SIZE: int = 1000
+    
+    # Cache settings
+    REDIS_URL: Optional[str] = Field(
+        default=None,
+        description="Redis connection URL for caching"
+    )
+    CACHE_TTL: int = Field(
+        default=3600,
+        description="Cache TTL in seconds"
+    )
     
     # Logging settings
     LOG_LEVEL: str = "INFO"
-    
-    # Development settings
-    DEBUG: bool = False
     
     class Config:
         env_file = ".env"

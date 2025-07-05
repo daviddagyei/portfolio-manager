@@ -1,10 +1,20 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
 from contextlib import asynccontextmanager
 import structlog
+from pydantic import ValidationError
 
 from app.core.config import settings
+from app.core.database import init_db
 from app.api.v1.api import api_router
+from app.utils.exceptions import (
+    APIException,
+    api_exception_handler,
+    validation_exception_handler,
+    http_exception_handler,
+    general_exception_handler
+)
 
 # Configure structured logging
 structlog.configure(
@@ -32,8 +42,13 @@ async def lifespan(app: FastAPI):
     """Handle application startup and shutdown events."""
     logger.info("Portfolio Manager API starting up...")
     
-    # Startup logic here
-    # Initialize database connections, cache, etc.
+    # Initialize database
+    try:
+        init_db()
+        logger.info("Database initialized successfully")
+    except Exception as e:
+        logger.error("Failed to initialize database", error=str(e))
+        raise
     
     yield
     
@@ -79,6 +94,24 @@ def create_application() -> FastAPI:
 
 # Create the FastAPI application
 app = create_application()
+
+
+# Exception handlers
+@app.exception_handler(APIException)
+async def handle_api_exception(request, exc: APIException):
+    return await api_exception_handler(request, exc)
+
+@app.exception_handler(ValidationError)
+async def handle_validation_error(request, exc: ValidationError):
+    return await validation_exception_handler(request, exc)
+
+@app.exception_handler(RequestValidationError)
+async def handle_request_validation_error(request, exc: RequestValidationError):
+    return await validation_exception_handler(request, exc)
+
+@app.exception_handler(Exception)
+async def handle_exception(request, exc: Exception):
+    return await general_exception_handler(request, exc)
 
 
 if __name__ == "__main__":
