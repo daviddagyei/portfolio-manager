@@ -1,0 +1,29 @@
+{
+    "include": [
+        "app"
+    ],
+    "exclude": [
+        "**/__pycache__",
+        "venv",
+        "tests"
+    ],
+    "venv": "./venv",
+    "venvPath": ".",
+    "pythonVersion": "3.12",
+    "pythonPlatform": "Linux",
+    "executionEnvironments": [
+        {
+            "root": "./app",
+            "pythonVersion": "3.12",
+            "pythonPlatform": "Linux",
+            "extraPaths": [
+                "./venv/lib/python3.12/site-packages"
+            ]
+        }
+    ],
+    "typeCheckingMode": "basic",
+    "useLibraryCodeForTypes": true,
+    "autoImportCompletions": true,
+    "autoSearchPaths": true,
+    "stubPath": "./venv/lib/python3.12/site-packages"
+}
