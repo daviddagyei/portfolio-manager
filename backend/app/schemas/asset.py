@@ -2,22 +2,9 @@ from pydantic import BaseModel, Field, validator
 from typing import Optional, List
 from datetime import datetime
 from decimal import Decimal
-from enum import Enum
 
 from .base import BaseSchema, TimestampedSchema
-
-
-class AssetType(str, Enum):
-    """Asset types supported by the system."""
-    STOCK = "stock"
-    BOND = "bond"
-    ETF = "etf"
-    MUTUAL_FUND = "mutual_fund"
-    CRYPTOCURRENCY = "cryptocurrency"
-    COMMODITY = "commodity"
-    REAL_ESTATE = "real_estate"
-    CASH = "cash"
-    OTHER = "other"
+from app.models.asset import AssetType
 
 
 class AssetBase(BaseSchema):

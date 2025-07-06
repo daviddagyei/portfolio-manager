@@ -1,8 +1,9 @@
 from .base import BaseSchema, TimestampedSchema, ResponseSchema
 from .asset import (
-    AssetType, AssetBase, AssetCreate, AssetUpdate, Asset,
+    AssetBase, AssetCreate, AssetUpdate, Asset,
     AssetResponse, AssetListResponse
 )
+from app.models.asset import AssetType
 from .portfolio import (
     PortfolioType, PortfolioBase, PortfolioCreate, PortfolioUpdate,
     Portfolio, PortfolioSummary, PortfolioResponse, PortfolioListResponse

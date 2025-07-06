@@ -70,7 +70,18 @@ class AssetService:
         if existing_asset:
             raise ValueError(f"Asset with symbol {asset_data.symbol} already exists")
         
-        asset = AssetModel(**asset_data.dict())
+        # Convert the schema data to dict and handle enum conversion
+        asset_dict = asset_data.dict()
+        
+        # The asset_type comes as a string from the schema, but we need to convert it to the enum
+        from app.models.asset import AssetType
+        asset_type_str = asset_dict['asset_type']
+        
+        # Convert string to enum
+        asset_type_enum = AssetType(asset_type_str)
+        asset_dict['asset_type'] = asset_type_enum
+        
+        asset = AssetModel(**asset_dict)
         
         self.db.add(asset)
         self.db.commit()

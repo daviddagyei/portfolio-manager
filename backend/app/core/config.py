@@ -64,13 +64,45 @@ class Settings(BaseSettings):
     
     # Cache settings
     REDIS_URL: Optional[str] = Field(
-        default=None,
-        description="Redis connection URL for caching"
+        default="redis://localhost:6379/0",
+        description="Redis connection URL for caching and tasks"
     )
     CACHE_TTL: int = Field(
         default=3600,
         description="Cache TTL in seconds"
     )
+    
+    # Market Data Settings
+    MARKET_DATA_PROVIDER: str = Field(
+        default="yahoo",
+        description="Default market data provider"
+    )
+    MARKET_DATA_RATE_LIMIT: int = Field(
+        default=5,
+        description="Market data API rate limit (requests per second)"
+    )
+    MARKET_DATA_TIMEOUT: int = Field(
+        default=30,
+        description="Market data API timeout in seconds"
+    )
+    
+    # Background Task Settings
+    CELERY_BROKER_URL: Optional[str] = Field(
+        default=None,
+        description="Celery broker URL (defaults to REDIS_URL)"
+    )
+    CELERY_RESULT_BACKEND: Optional[str] = Field(
+        default=None,
+        description="Celery result backend URL (defaults to REDIS_URL)"
+    )
+    
+    @property
+    def celery_broker_url(self) -> str:
+        return self.CELERY_BROKER_URL or self.REDIS_URL or "redis://localhost:6379/0"
+    
+    @property
+    def celery_result_backend(self) -> str:
+        return self.CELERY_RESULT_BACKEND or self.REDIS_URL or "redis://localhost:6379/0"
     
     # Logging settings
     LOG_LEVEL: str = "INFO"

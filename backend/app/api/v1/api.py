@@ -1,10 +1,16 @@
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import portfolios, market_data, analytics, optimization
+from app.api.v1.endpoints import portfolios, market_data, analytics, optimization, assets
 
 api_router = APIRouter()
 
 # Include all endpoint routers
+api_router.include_router(
+    assets.router,
+    prefix="/assets",
+    tags=["assets"]
+)
+
 api_router.include_router(
     portfolios.router,
     prefix="/portfolios",
