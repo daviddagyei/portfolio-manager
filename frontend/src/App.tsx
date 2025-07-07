@@ -10,7 +10,7 @@ import RiskAnalytics from './pages/RiskAnalytics';
 
 function App() {
   return (
-    <Router>
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Box sx={{ flexGrow: 1 }}>
         <Navigation />
         
