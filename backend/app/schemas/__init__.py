@@ -17,6 +17,14 @@ from .price_data import (
     PriceDataWithAsset, PriceDataResponse, PriceDataListResponse,
     PriceHistoryRequest, PriceHistoryResponse
 )
+from .optimization import (
+    OptimizationMethod, OptimizationRequest, OptimizationResponse,
+    EfficientFrontierRequest, EfficientFrontierResponse,
+    OptimizedPortfolio, RebalancingRequest, RebalancingResponse,
+    ScenarioAnalysisRequest, ScenarioAnalysisResponse,
+    RiskBudgetingRequest, RiskBudgetingResponse,
+    DiscreteAllocationRequest, DiscreteAllocationResponse
+)
 
 __all__ = [
     # Base schemas
@@ -63,4 +71,20 @@ __all__ = [
     "PriceDataListResponse",
     "PriceHistoryRequest",
     "PriceHistoryResponse",
+    
+    # Optimization schemas
+    "OptimizationMethod",
+    "OptimizationRequest",
+    "OptimizationResponse",
+    "EfficientFrontierRequest",
+    "EfficientFrontierResponse",
+    "OptimizedPortfolio",
+    "RebalancingRequest",
+    "RebalancingResponse",
+    "ScenarioAnalysisRequest",
+    "ScenarioAnalysisResponse",
+    "RiskBudgetingRequest",
+    "RiskBudgetingResponse",
+    "DiscreteAllocationRequest",
+    "DiscreteAllocationResponse"
 ]

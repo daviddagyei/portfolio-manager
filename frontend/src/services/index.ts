@@ -5,3 +5,4 @@ export { default as portfolioService } from './portfolioService';
 export { default as transactionService } from './transactionService';
 export { default as marketDataService } from './marketDataService';
 export { default as riskAnalyticsService } from './riskAnalyticsService';
+export { optimizationService } from './optimizationService';
