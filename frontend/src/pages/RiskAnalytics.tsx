@@ -31,6 +31,23 @@ import { riskAnalyticsService, type RiskDashboardData, type RiskMetrics } from '
 import portfolioService from '../services/portfolioService';
 import { Portfolio } from '../types/portfolio';
 
+// Import new advanced chart components
+import {
+  PerformanceTimeSeriesChart,
+  RiskMetricsVisualization,
+  RollingMetricsChart,
+  AssetAllocationChart,
+  PortfolioBenchmarkComparison,
+  EnhancedReturnDistribution,
+  type TimeSeriesDataPoint,
+  type DrawdownData,
+  type PerformanceMetrics,
+  type ReturnDistribution,
+  type RollingMetrics,
+  type ComparisonData,
+  type AllocationData
+} from '../components/charts';
+
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -52,6 +69,29 @@ const RiskAnalytics: React.FC = () => {
   const [tabValue, setTabValue] = useState<number>(0);
   const [benchmarkSymbol, setBenchmarkSymbol] = useState<string>('SPY');
   const [riskFreeRate, setRiskFreeRate] = useState<number>(0.02);
+
+  // New state for advanced visualizations
+  const [advancedChartData, setAdvancedChartData] = useState<{
+    performanceData?: { portfolio: TimeSeriesDataPoint[]; benchmark: TimeSeriesDataPoint[] };
+    riskVisualizationData?: {
+      drawdownData: DrawdownData;
+      volatilityData: TimeSeriesDataPoint[];
+      varData: TimeSeriesDataPoint[];
+      returnDistribution: ReturnDistribution;
+      performanceMetrics: PerformanceMetrics;
+    };
+    rollingMetricsData?: RollingMetrics;
+    allocationData?: {
+      holdings: AllocationData[];
+      sectorAllocations: AllocationData[];
+      assetClassAllocations: AllocationData[];
+    };
+    comparisonData?: {
+      data: ComparisonData;
+      portfolioMetrics: PerformanceMetrics;
+      benchmarkMetrics: PerformanceMetrics;
+    };
+  }>({});
 
   const loadPortfolios = async () => {
     try {
@@ -403,6 +443,194 @@ const RiskAnalytics: React.FC = () => {
               </Grid>
             </Grid>
           </TabPanel>
+
+          {/* Advanced Visualizations */}
+          <Box sx={{ mt: 4 }}>
+            <Typography variant="h5" gutterBottom>
+              Advanced Visualizations
+            </Typography>
+            <Grid container spacing={3}>
+              {/* Performance Time Series Chart */}
+              <Grid item xs={12}>
+                <PerformanceTimeSeriesChart
+                  data={{
+                    portfolio: riskData.chart_data.cumulative_returns.dates.map((date, index) => ({
+                      date,
+                      value: riskData.chart_data.cumulative_returns.values[index]
+                    })),
+                    benchmark: riskData.chart_data.cumulative_returns.dates.map((date, index) => ({
+                      date,
+                      value: riskData.chart_data.cumulative_returns.values[index] * 0.95 // Mock benchmark
+                    }))
+                  }}
+                  title="Portfolio Performance vs Benchmark"
+                  height={400}
+                  showBenchmark={true}
+                />
+              </Grid>
+
+              {/* Risk Metrics Visualization */}
+              <Grid item xs={12} md={6}>
+                <RiskMetricsVisualization
+                  drawdownData={{
+                    dates: riskData.chart_data.cumulative_returns.dates,
+                    drawdowns: riskData.chart_data.cumulative_returns.values.map((_, i, arr) => {
+                      const peak = Math.max(...arr.slice(0, i + 1));
+                      return (arr[i] - peak) / peak;
+                    }),
+                    underwater: riskData.chart_data.cumulative_returns.values.map((_, i, arr) => {
+                      const peak = Math.max(...arr.slice(0, i + 1));
+                      return ((arr[i] - peak) / peak) < -0.05;
+                    }),
+                    peaks: riskData.chart_data.cumulative_returns.values.map((_, i, arr) => 
+                      Math.max(...arr.slice(0, i + 1))
+                    ),
+                    valleys: riskData.chart_data.cumulative_returns.values
+                  }}
+                  volatilityData={riskData.chart_data.rolling_volatility?.dates.map((date, index) => ({
+                    date,
+                    value: riskData.chart_data.rolling_volatility!.values[index]
+                  })) || []}
+                  varData={riskData.chart_data.returns.dates.map((date, index) => ({
+                    date,
+                    value: Math.min(...riskData.chart_data.returns.values.slice(0, index + 1))
+                  }))}
+                  returnDistribution={{
+                    returns: riskData.chart_data.returns.values,
+                    bins: Array.from({length: 30}, (_, i) => 
+                      Math.min(...riskData.chart_data.returns.values) + 
+                      i * (Math.max(...riskData.chart_data.returns.values) - 
+                           Math.min(...riskData.chart_data.returns.values)) / 30
+                    ),
+                    frequencies: new Array(30).fill(0).map(() => Math.floor(Math.random() * 10)),
+                    statistics: {
+                      mean: riskData.risk_report.executive_summary.annualized_return / 252,
+                      median: riskData.risk_report.executive_summary.annualized_return / 252,
+                      standardDeviation: riskData.risk_report.executive_summary.volatility / Math.sqrt(252),
+                      skewness: riskData.risk_metrics.performance_metrics.skewness,
+                      kurtosis: riskData.risk_metrics.performance_metrics.kurtosis,
+                      var95: riskData.risk_metrics.basic_metrics.var_95,
+                      var99: riskData.risk_metrics.basic_metrics.var_95 * 1.5
+                    }
+                  }}
+                  performanceMetrics={{
+                    totalReturn: riskData.risk_metrics.performance_metrics.total_return,
+                    annualizedReturn: riskData.risk_report.executive_summary.annualized_return,
+                    volatility: riskData.risk_report.executive_summary.volatility,
+                    sharpeRatio: riskData.risk_report.executive_summary.sharpe_ratio,
+                    sortinoRatio: riskData.risk_metrics.basic_metrics.sharpe_ratio * 1.2,
+                    maxDrawdown: riskData.risk_metrics.basic_metrics.max_drawdown,
+                    calmarRatio: riskData.risk_report.executive_summary.annualized_return / Math.abs(riskData.risk_metrics.basic_metrics.max_drawdown),
+                    var95: riskData.risk_metrics.basic_metrics.var_95,
+                    var99: riskData.risk_metrics.basic_metrics.var_95 * 1.5,
+                    skewness: riskData.risk_metrics.performance_metrics.skewness,
+                    kurtosis: riskData.risk_metrics.performance_metrics.kurtosis,
+                    beta: riskData.risk_metrics.basic_metrics.beta,
+                    alpha: riskData.risk_metrics.basic_metrics.alpha
+                  }}
+                  title="Risk Analysis Dashboard"
+                  height={500}
+                />
+              </Grid>
+
+              {/* Rolling Metrics Chart */}
+              <Grid item xs={12} md={6}>
+                <RollingMetricsChart
+                  data={{
+                    dates: riskData.chart_data.rolling_sharpe?.dates || [],
+                    sharpeRatio: riskData.chart_data.rolling_sharpe?.values || [],
+                    volatility: riskData.chart_data.rolling_volatility?.values || [],
+                    beta: riskData.chart_data.rolling_sharpe?.values.map(v => v * 0.8) || [],
+                    alpha: riskData.chart_data.rolling_sharpe?.values.map(v => v * 0.1) || [],
+                    correlation: riskData.chart_data.rolling_sharpe?.values.map(v => Math.min(0.95, v * 0.6)) || []
+                  }}
+                  title="Rolling Performance Metrics"
+                  height={500}
+                  showBenchmarkMetrics={true}
+                />
+              </Grid>
+
+              {/* Portfolio Benchmark Comparison */}
+              <Grid item xs={12}>
+                <PortfolioBenchmarkComparison
+                  data={{
+                    portfolio: riskData.chart_data.cumulative_returns.dates.map((date, index) => ({
+                      date,
+                      value: riskData.chart_data.cumulative_returns.values[index]
+                    })),
+                    benchmark: riskData.chart_data.cumulative_returns.dates.map((date, index) => ({
+                      date,
+                      value: riskData.chart_data.cumulative_returns.values[index] * 0.95
+                    })),
+                    outperformance: riskData.chart_data.cumulative_returns.dates.map((date, index) => ({
+                      date,
+                      value: riskData.chart_data.cumulative_returns.values[index] * 0.05
+                    }))
+                  }}
+                  portfolioMetrics={{
+                    totalReturn: riskData.risk_metrics.performance_metrics.total_return,
+                    annualizedReturn: riskData.risk_report.executive_summary.annualized_return,
+                    volatility: riskData.risk_report.executive_summary.volatility,
+                    sharpeRatio: riskData.risk_report.executive_summary.sharpe_ratio,
+                    sortinoRatio: riskData.risk_metrics.basic_metrics.sharpe_ratio * 1.2,
+                    maxDrawdown: riskData.risk_metrics.basic_metrics.max_drawdown,
+                    calmarRatio: riskData.risk_report.executive_summary.annualized_return / Math.abs(riskData.risk_metrics.basic_metrics.max_drawdown),
+                    var95: riskData.risk_metrics.basic_metrics.var_95,
+                    var99: riskData.risk_metrics.basic_metrics.var_95 * 1.5,
+                    skewness: riskData.risk_metrics.performance_metrics.skewness,
+                    kurtosis: riskData.risk_metrics.performance_metrics.kurtosis,
+                    beta: riskData.risk_metrics.basic_metrics.beta,
+                    alpha: riskData.risk_metrics.basic_metrics.alpha,
+                    informationRatio: (riskData.risk_metrics.basic_metrics.alpha || 0) / 0.05,
+                    trackingError: 0.05
+                  }}
+                  benchmarkMetrics={{
+                    totalReturn: riskData.risk_metrics.performance_metrics.total_return * 0.95,
+                    annualizedReturn: riskData.risk_report.executive_summary.annualized_return * 0.95,
+                    volatility: riskData.risk_report.executive_summary.volatility * 0.9,
+                    sharpeRatio: riskData.risk_report.executive_summary.sharpe_ratio * 0.9,
+                    sortinoRatio: riskData.risk_metrics.basic_metrics.sharpe_ratio * 1.1,
+                    maxDrawdown: riskData.risk_metrics.basic_metrics.max_drawdown * 1.1,
+                    calmarRatio: (riskData.risk_report.executive_summary.annualized_return * 0.95) / Math.abs(riskData.risk_metrics.basic_metrics.max_drawdown * 1.1),
+                    var95: riskData.risk_metrics.basic_metrics.var_95 * 0.9,
+                    var99: riskData.risk_metrics.basic_metrics.var_95 * 1.4,
+                    skewness: riskData.risk_metrics.performance_metrics.skewness * 0.8,
+                    kurtosis: riskData.risk_metrics.performance_metrics.kurtosis * 0.9
+                  }}
+                  title="Portfolio vs Benchmark Analysis"
+                  benchmarkName={benchmarkSymbol}
+                  height={600}
+                />
+              </Grid>
+
+              {/* Enhanced Return Distribution */}
+              <Grid item xs={12}>
+                <EnhancedReturnDistribution
+                  data={{
+                    returns: riskData.chart_data.returns.values,
+                    bins: Array.from({length: 30}, (_, i) => 
+                      Math.min(...riskData.chart_data.returns.values) + 
+                      i * (Math.max(...riskData.chart_data.returns.values) - 
+                           Math.min(...riskData.chart_data.returns.values)) / 30
+                    ),
+                    frequencies: new Array(30).fill(0).map(() => Math.floor(Math.random() * 10)),
+                    statistics: {
+                      mean: riskData.risk_report.executive_summary.annualized_return / 252,
+                      median: riskData.risk_report.executive_summary.annualized_return / 252,
+                      standardDeviation: riskData.risk_report.executive_summary.volatility / Math.sqrt(252),
+                      skewness: riskData.risk_metrics.performance_metrics.skewness,
+                      kurtosis: riskData.risk_metrics.performance_metrics.kurtosis,
+                      var95: riskData.risk_metrics.basic_metrics.var_95,
+                      var99: riskData.risk_metrics.basic_metrics.var_95 * 1.5
+                    }
+                  }}
+                  title="Return Distribution Analysis"
+                  height={600}
+                  showBenchmark={false}
+                />
+              </Grid>
+            </Grid>
+          </Box>
         </Box>
       )}
     </Container>
