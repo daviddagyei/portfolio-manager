@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import portfolios, market_data, analytics, optimization, assets, transactions
+from app.api.v1.endpoints import portfolios, market_data, analytics, optimization, assets, transactions, risk_analytics
 
 api_router = APIRouter()
 
@@ -39,6 +39,11 @@ api_router.include_router(
     optimization.router,
     prefix="/optimization",
     tags=["optimization"]
+)
+
+api_router.include_router(
+    risk_analytics.router,
+    tags=["risk-analytics"]
 )
 
 

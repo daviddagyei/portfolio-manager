@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import Portfolio from './pages/Portfolio';
 import Analytics from './pages/Analytics';
 import Optimization from './pages/Optimization';
+import RiskAnalytics from './pages/RiskAnalytics';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/optimization" element={<Optimization />} />
+            <Route path="/risk-analytics" element={<RiskAnalytics />} />
           </Routes>
         </Container>
       </Box>

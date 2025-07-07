@@ -17,6 +17,7 @@ import {
   AccountBalanceWallet as PortfolioIcon,
   Analytics as AnalyticsIcon,
   TrendingUp as OptimizationIcon,
+  Security as RiskIcon,
   Menu as MenuIcon
 } from '@mui/icons-material';
 
@@ -41,6 +42,7 @@ const Navigation: React.FC = () => {
     { path: '/', label: 'Dashboard', icon: <DashboardIcon /> },
     { path: '/portfolio', label: 'Portfolio', icon: <PortfolioIcon /> },
     { path: '/analytics', label: 'Analytics', icon: <AnalyticsIcon /> },
+    { path: '/risk-analytics', label: 'Risk Analytics', icon: <RiskIcon /> },
     { path: '/optimization', label: 'Optimization', icon: <OptimizationIcon /> }
   ];
 
