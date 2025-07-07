@@ -1,0 +1,27 @@
+# Core FastAPI dependencies
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# Data processing libraries
+numpy>=1.24.0
+pandas>=2.0.0
+
+# Database and ORM
+sqlalchemy==2.0.23
+alembic==1.13.1
+
+# Configuration and environment
+python-dotenv==1.0.0
+
+# Logging
+structlog==23.2.0
+
+# HTTP clients
+httpx==0.25.2
+requests==2.31.0
+
+# Additional utilities
+python-dateutil==2.8.2
+pytz==2023.3

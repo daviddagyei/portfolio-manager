@@ -48,6 +48,22 @@ class PortfolioService {
     });
     return response.data;
   }
+
+  async getPortfolioHoldings(id: number): Promise<ApiResponse<any[]>> {
+    const response = await apiClient.get(`${this.endpoint}/${id}/holdings`);
+    return response.data;
+  }
+
+  async updatePortfolioHolding(portfolioId: number, assetId: number, data: any): Promise<ApiResponse<any>> {
+    const response = await apiClient.put(`${this.endpoint}/${portfolioId}/holdings/${assetId}`, data);
+    return response.data;
+  }
+
+  async deletePortfolioHolding(portfolioId: number, holdingId: number): Promise<ApiResponse<void>> {
+    const response = await apiClient.delete(`${this.endpoint}/${portfolioId}/holdings/${holdingId}`);
+    return response.data;
+  }
 }
 
-export default new PortfolioService();
+const portfolioService = new PortfolioService();
+export default portfolioService;

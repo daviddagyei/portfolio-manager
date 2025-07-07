@@ -44,4 +44,5 @@ class AssetService {
   }
 }
 
-export default new AssetService();
+const assetService = new AssetService();
+export default assetService;

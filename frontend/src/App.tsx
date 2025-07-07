@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Container, AppBar, Toolbar, Typography, Box } from '@mui/material';
+import { Container, Box } from '@mui/material';
+import { Navigation } from './components';
 import Dashboard from './pages/Dashboard';
 import Portfolio from './pages/Portfolio';
 import Analytics from './pages/Analytics';
@@ -10,13 +11,7 @@ function App() {
   return (
     <Router>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Portfolio Manager
-            </Typography>
-          </Toolbar>
-        </AppBar>
+        <Navigation />
         
         <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
           <Routes>

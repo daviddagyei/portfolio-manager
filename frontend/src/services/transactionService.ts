@@ -45,4 +45,5 @@ class TransactionService {
   }
 }
 
-export default new TransactionService();
+const transactionService = new TransactionService();
+export default transactionService;

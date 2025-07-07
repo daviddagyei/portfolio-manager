@@ -1,5 +1,4 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
-import { ApiResponse, PaginatedResponse } from '../types/base';
 
 // Create axios instance with default configuration
 const apiClient: AxiosInstance = axios.create({

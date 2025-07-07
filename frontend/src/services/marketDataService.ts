@@ -38,4 +38,5 @@ class MarketDataService {
   }
 }
 
-export default new MarketDataService();
+const marketDataService = new MarketDataService();
+export default marketDataService;
