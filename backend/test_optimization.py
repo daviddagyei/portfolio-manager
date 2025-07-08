@@ -10,7 +10,7 @@ import sys
 from datetime import datetime, timedelta
 
 # Configuration
-BASE_URL = "http://localhost:8000"
+BASE_URL = "http://localhost:8080"
 API_BASE = f"{BASE_URL}/api/v1"
 
 def test_optimization_methods():

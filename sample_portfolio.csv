@@ -1,0 +1,16 @@
+symbol,name,quantity,average_cost,current_price,asset_type,sector,industry
+AAPL,Apple Inc,100,150.25,155.30,stock,Technology,Consumer Electronics
+GOOGL,Alphabet Inc,50,2750.50,2801.75,stock,Technology,Internet Services
+MSFT,Microsoft Corporation,75,350.75,358.20,stock,Technology,Software
+TSLA,Tesla Inc,25,850.00,892.50,stock,Consumer Cyclical,Auto Manufacturers
+AMZN,Amazon.com Inc,30,3200.00,3285.75,stock,Consumer Cyclical,Internet Retail
+SPY,SPDR S&P 500 ETF,200,420.50,428.90,etf,Technology,Index Funds
+VTI,Vanguard Total Stock Market ETF,150,225.75,230.15,etf,Technology,Index Funds
+BND,Vanguard Total Bond Market ETF,100,85.25,84.80,etf,Fixed Income,Bond Funds
+NVDA,NVIDIA Corporation,40,900.00,945.25,stock,Technology,Semiconductors
+META,Meta Platforms Inc,60,325.50,332.75,stock,Technology,Social Media
+NFLX,Netflix Inc,35,450.75,467.20,stock,Communication Services,Entertainment
+DIS,The Walt Disney Company,80,105.25,108.50,stock,Communication Services,Entertainment
+JPM,JPMorgan Chase & Co,45,150.00,152.75,stock,Financial Services,Banks
+JNJ,Johnson & Johnson,90,165.75,168.20,stock,Healthcare,Pharmaceuticals
+PG,Procter & Gamble Co,70,155.50,157.90,stock,Consumer Defensive,Household Products

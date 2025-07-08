@@ -19,12 +19,12 @@ import {
 interface PortfolioSummaryProps {
   id: number;
   name: string;
-  portfolioType: string;
+  portfolioType?: string;
   currentValue: number;
   totalReturn: number;
   totalReturnPercentage: number;
   assetCount: number;
-  lastUpdated: string;
+  lastUpdated?: string;
   loading?: boolean;
   error?: string;
 }
@@ -32,12 +32,12 @@ interface PortfolioSummaryProps {
 const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({
   id,
   name,
-  portfolioType,
-  currentValue,
-  totalReturn,
-  totalReturnPercentage,
-  assetCount,
-  lastUpdated,
+  portfolioType = 'other',
+  currentValue = 0,
+  totalReturn = 0,
+  totalReturnPercentage = 0,
+  assetCount = 0,
+  lastUpdated = '',
   loading = false,
   error
 }) => {
@@ -55,6 +55,7 @@ const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({
   };
 
   const formatDate = (dateString: string) => {
+    if (!dateString) return 'Never';
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
@@ -73,7 +74,7 @@ const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({
       'trading': 'warning',
       'other': 'error'
     };
-    return colors[type.toLowerCase()] || 'primary';
+    return colors[type?.toLowerCase() || 'other'] || 'primary';
   };
 
   const isPositiveReturn = totalReturn >= 0;
@@ -107,11 +108,11 @@ const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
           <Box>
             <Typography variant="h6" component="h2" gutterBottom>
-              {name}
+              {name || 'Untitled Portfolio'}
             </Typography>
             <Chip 
-              label={portfolioType.toUpperCase()} 
-              color={getPortfolioTypeColor(portfolioType)}
+              label={portfolioType?.toUpperCase() || 'UNKNOWN'} 
+              color={getPortfolioTypeColor(portfolioType || 'other')}
               size="small"
             />
           </Box>

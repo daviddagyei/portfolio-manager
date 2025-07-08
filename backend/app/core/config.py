@@ -16,14 +16,10 @@ class Settings(BaseSettings):
     
     # CORS settings
     BACKEND_CORS_ORIGINS: List[str] = [
-        "http://localhost:3000",  # React dev server
-        "http://localhost:3030",  # React dev server (new port)
-        "http://localhost:8000",  # FastAPI docs
-        "http://localhost:8001",  # FastAPI backend
-        "http://127.0.0.1:3000",
+        "http://localhost:3030",  # React dev server
+        "http://localhost:8080",  # FastAPI docs
         "http://127.0.0.1:3030",
-        "http://127.0.0.1:8000",
-        "http://127.0.0.1:8001",
+        "http://127.0.0.1:8080",
     ]
     
     @validator("BACKEND_CORS_ORIGINS", pre=True)

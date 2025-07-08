@@ -1,0 +1,4 @@
+symbol,name,quantity,average_cost,current_price,asset_type,sector,industry
+AAPL,Apple Inc,100,150.25,155.30,stock,Technology,Consumer Electronics
+GOOGL,Alphabet Inc,50,2750.50,2801.75,stock,Technology,Internet Services
+MSFT,Microsoft Corporation,75,350.75,358.20,stock,Technology,Software
